@@ -1,0 +1,28 @@
+{
+  "name": "wpgen.js",
+  "version": "1.0.0",
+  "description": "A command line utility to aid in setting up the HeadStart theme template.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "wpgen": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fenix429/wpgen.js.git"
+  },
+  "author": "Jonathan Biddle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fenix429/wpgen.js/issues"
+  },
+  "homepage": "https://github.com/fenix429/wpgen.js#readme",
+  "dependencies": {
+    "change-case": "^2.3.0",
+    "commander": "^2.9.0",
+    "lodash": "^3.10.1",
+    "promptly": "^0.2.1",
+    "shelljs": "^0.5.3"
+  }
+}
