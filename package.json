@@ -22,7 +22,10 @@
     "change-case": "^2.3.0",
     "commander": "^2.9.0",
     "lodash": "^3.10.1",
+    "multi-glob": "^1.0.1",
+    "nodegit": "^0.6.0",
     "promptly": "^0.2.1",
+    "q": "^1.4.1",
     "shelljs": "^0.5.3"
   }
 }
