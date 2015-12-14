@@ -1,11 +1,12 @@
 
 // Dependencies
+var Promise = require("bluebird");
+var glob = require("glob");
 var shell = require("shelljs");
 var promptly = require("promptly");
 var changeCase = require('change-case');
-var glob = require("multi-glob").glob;
 var nodegit = require("nodegit");
-var Q = require("q");
+
 
 // Script Vars
 var config = {};
@@ -46,39 +47,58 @@ var fetchThemeTemplate = function() {
 };
 
 var setupThemeTemplate = function(repository) {
-	// Thngs to do
-	var removedGitFiles = Q.defer(),
-		editedThemeFiles = Q.defer();
+	// Remove Git specific files
+	var removeGitFiles = new Promise( function(resolve, reject){
+		glob(destination + '/**/.{git,gitignore}', function(err, files){
+			shell.rm('-rf', files);
+			var err = shell.error();
 
-	// Remove the Git specific file
-	glob([ destination + '/**/.git', destination + '/**/.gitignore' ], function(err, files){
-		shell.rm('-rf', files);
-		removedGitFiles.resolve();
-	});
-
-	// Loop through the files replacing the Theme Name, Slug, Package Name, and Node Name
-	glob([ destination + "/**/*.{php,less,css,json}" ], function(err, files){
-		files.forEach(function(file, i){
-			shell.sed( "-i", "@package HeadStart", "@package " + config.packageName, file );
-			shell.sed( "-i", "/themes/HeadStart/", "/themes/" + config.packageName, file );
-			shell.sed( "-i", "head_start", config.nodeName, file );
-			shell.sed( "-i", "HeadStart", config.themeName, file );
-			shell.sed( "-i", "_hs", config.themeSlug, file );
-
-			if (i === files.length - 1) {
-				editedThemeFiles.resolve();
+			if( err ) {
+				reject( err );
+			} else {
+				resolve( true );
 			}
 		});
 	});
 
-	Q.allSettled([removedGitFiles, editedThemeFiles]).then(function (result) {
-		// Setup the language file
-		shell.mv( destination + "/languages/_hs.pot", destination + "/languages/" + config.slug + ".pot");
+	// Loop through the files replacing the Theme Name, Slug, Package Name, and Node Name
+	var editThemeFiles = new Promise( function(resolve, reject){
+		glob(destination + "/**/*.{php,less,css,json}", function(err, files){
+			var err = null;
 
-		// Setup the project file
-		shell.mv( destination + "/HeadStart.sublime-project", destination + "/" + config.packageName + ".sublime-project");
+			files.forEach(function(file, i){
+				shell.sed( "-i", "@package HeadStart", "@package " + config.packageName, file );
+				err = shell.error() || err;
+				
+				shell.sed( "-i", "/themes/HeadStart/", "/themes/" + config.packageName, file );
+				err = shell.error() || err;
+				
+				shell.sed( "-i", "head_start", config.nodeName, file );
+				err = shell.error() || err;
+				
+				shell.sed( "-i", "HeadStart", config.themeName, file );
+				err = shell.error() || err;
 
-		shell.echo("Done... Running Theme Configuration...");
+				shell.sed( "-i", "_hs", config.themeSlug, file );
+				err = shell.error() || err;
+			});
+
+			if( err ) {
+				reject( err );
+			} else {
+				resolve( true );
+			}
+		});
+	});
+	
+	// Setup the language file
+	shell.mv( destination + "/languages/_hs.pot", destination + "/languages/" + config.slug + ".pot");
+
+	// Setup the project file
+	shell.mv( destination + "/HeadStart.sublime-project", destination + "/" + config.packageName + ".sublime-project");
+
+	Promise.all([removeGitFiles, editThemeFiles]).then(function(){
+		shell.echo("All done.  Moving on...");
 
 		configureTheme();
 	});
