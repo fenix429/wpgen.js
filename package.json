@@ -26,6 +26,7 @@
     "lodash": "^3.10.1",
     "nodegit": "^0.6.0",
     "promptly": "^0.2.1",
-    "shelljs": "^0.5.3"
+    "shelljs": "^0.5.3",
+    "synchronize": "^0.9.14"
   }
 }
