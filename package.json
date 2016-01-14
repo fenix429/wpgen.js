@@ -19,12 +19,12 @@
   },
   "homepage": "https://github.com/fenix429/wpgen.js#readme",
   "dependencies": {
-    "bluebird": "^3.0.6",
-    "change-case": "^2.3.0",
+    "bluebird": "^3.1.1",
+    "change-case": "^2.3.1",
     "commander": "^2.9.0",
-    "glob": "^6.0.1",
+    "glob": "^6.0.4",
     "lodash": "^3.10.1",
-    "nodegit": "^0.6.0",
+    "nodegit": "^0.6.3",
     "promptly": "^0.2.1",
     "shelljs": "^0.5.3",
     "synchronize": "^0.9.14"
