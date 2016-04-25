@@ -77,7 +77,7 @@ module.exports = function(themeName, themeSlug) {
 
 var fetchThemeTemplate = function() {
 	// Grab a fresh copy of the the starter files
-	nodegit.Clone.clone("https://github.com/fenix429/HeadStart", destination, null)
+	nodegit.Clone.clone("https://github.com/jonathanbiddle/HeadStart", destination, null)
 		.then( setupThemeTemplate )
 		.catch(function(err) {
 			console.log(err);
